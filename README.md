@@ -15,7 +15,7 @@ Spin the roulette to get a random combination of:
 - **a.** Tabular
 - **b.** Text  
 - **c.** Images
-- **d.** ** Joker** (Wild card!)
+- **d.** **Joker** (Wild card!)
 
 ### **Models**
 - **a.** Linear
@@ -25,7 +25,7 @@ Spin the roulette to get a random combination of:
 - **e.** Transformers (Encoder/Decoder)
 - **f.** Tree-based (Random Forests, GBDTs)
 - **g.** SVMs (Support Vector Machines)
-- **h.** ** Joker** (Wild card!)
+- **h.** **Joker** (Wild card!)
 
 ### **Tasks**
 - **a.** Regression
@@ -35,6 +35,6 @@ Spin the roulette to get a random combination of:
 - **e.** Dimensionality Reduction
 - **f.** Anomaly Detection
 - **g.** Clustering
-- **h.** ** Joker** (Wild card!)
+- **h.** **Joker** (Wild card!)
 
 Many of these combinations won't be the most efficient way to solve the task but they will make up for fun little experiments. If it's an impossible combination, we will just struggle to no end and make "artistic" assumptions to bring our ideas to life.
