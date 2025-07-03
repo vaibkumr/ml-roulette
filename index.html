@@ -68,49 +68,105 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
+        .wheel-container {
+            position: relative;
+            width: 240px;
+            height: 240px;
+        }
+
         .wheel {
             width: 200px;
             height: 200px;
             border-radius: 50%;
             position: relative;
-            background: conic-gradient(from 0deg,
-                    #ff6b6b 0deg 45deg,
-                    #4ecdc4 45deg 90deg,
-                    #45b7d1 90deg 135deg,
-                    #96ceb4 135deg 180deg,
-                    #feca57 180deg 225deg,
-                    #ff9ff3 225deg 270deg,
-                    #54a0ff 270deg 315deg,
-                    #5f27cd 315deg 360deg);
             border: 8px solid white;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
             transition: transform 0.1s ease;
+            margin: 20px;
         }
 
-        .wheel-content {
+        .wheel-segment {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-origin: 50% 50%;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        .wheel-segment-text {
+            position: absolute;
+            font-size: 9px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            line-height: 1.1;
+            max-width: 60px;
+            word-wrap: break-word;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .needle {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 25px solid #ff4757;
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .needle::after {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: #ff4757;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #ff4757;
+        }
+
+        .wheel-label {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.95);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #333;
+            font-size: 10px;
             font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
             text-align: center;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+            max-width: 60px;
+            line-height: 1.1;
+            word-wrap: break-word;
+            white-space: normal;
         }
 
         .wheel-result {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
             font-size: 1.1rem;
-            color: #2c3e50;
+            color: #fff;
             line-height: 1.3;
             padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            min-width: 150px;
+            text-align: center;
+            font-weight: bold;
         }
 
         .spin-button {
@@ -143,19 +199,7 @@
             transform: none;
         }
 
-        .spinning {
-            animation: spin 3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-        }
 
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(1800deg);
-            }
-        }
 
         .confetti {
             position: fixed;
@@ -208,14 +252,20 @@
                 gap: 1.5rem;
             }
 
+            .wheel-container {
+                width: 180px;
+                height: 180px;
+            }
+
             .wheel {
                 width: 150px;
                 height: 150px;
+                margin: 15px;
             }
 
-            .wheel-content {
-                width: 120px;
-                height: 120px;
+            .wheel-label {
+                font-size: 8px;
+                max-width: 45px;
             }
 
             h1 {
@@ -233,28 +283,34 @@
         <div class="wheels-container">
             <div class="wheel-wrapper">
                 <div class="wheel-title">📊 Data</div>
-                <div class="wheel" id="dataWheel">
-                    <div class="wheel-content">
-                        <div class="wheel-result" id="dataResult">Ready to spin!</div>
+                <div class="wheel-container">
+                    <div class="needle"></div>
+                    <div class="wheel" id="dataWheel">
+                        <!-- Segments will be generated by JavaScript -->
                     </div>
+                    <div class="wheel-result" id="dataResult">Ready to spin!</div>
                 </div>
             </div>
 
             <div class="wheel-wrapper">
                 <div class="wheel-title">🧠 Model</div>
-                <div class="wheel" id="modelWheel">
-                    <div class="wheel-content">
-                        <div class="wheel-result" id="modelResult">Ready to spin!</div>
+                <div class="wheel-container">
+                    <div class="needle"></div>
+                    <div class="wheel" id="modelWheel">
+                        <!-- Segments will be generated by JavaScript -->
                     </div>
+                    <div class="wheel-result" id="modelResult">Ready to spin!</div>
                 </div>
             </div>
 
             <div class="wheel-wrapper">
                 <div class="wheel-title">🎯 Task</div>
-                <div class="wheel" id="taskWheel">
-                    <div class="wheel-content">
-                        <div class="wheel-result" id="taskResult">Ready to spin!</div>
+                <div class="wheel-container">
+                    <div class="needle"></div>
+                    <div class="wheel" id="taskWheel">
+                        <!-- Segments will be generated by JavaScript -->
                     </div>
+                    <div class="wheel-result" id="taskResult">Ready to spin!</div>
                 </div>
             </div>
         </div>
@@ -300,10 +356,68 @@
             ]
         };
 
+        // Color schemes for different wheel types
+        const colorSchemes = {
+            data: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4'],
+            model: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'],
+            task: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd']
+        };
+
         let isSpinning = false;
 
         function getRandomChoice(array) {
             return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function getRandomIndex(array) {
+            return Math.floor(Math.random() * array.length);
+        }
+
+        function setupWheel(wheelId, wheelType) {
+            const wheel = document.getElementById(wheelId);
+            if (!wheel) return;
+
+            const data = wheelData[wheelType];
+            const colors = colorSchemes[wheelType];
+            const segmentAngle = 360 / data.length;
+
+            wheel.innerHTML = ''; // Clear existing content
+            wheel.style.transform = 'rotate(0deg)'; // Reset rotation
+
+            // 1. Create conic-gradient for the wheel background
+            const gradientParts = data.map((item, index) => {
+                const startAngle = index * segmentAngle;
+                const endAngle = startAngle + segmentAngle;
+                const color = colors[index % colors.length];
+                return `${color} ${startAngle}deg ${endAngle}deg`;
+            });
+            const gradientOffset = 270 - segmentAngle / 2;
+            wheel.style.background = `conic-gradient(from ${gradientOffset}deg, ${gradientParts.join(', ')})`;
+
+            // 2. Create and position the text labels
+            const wheelRadius = wheel.offsetWidth / 2;
+            const labelRadius = wheelRadius * 0.65; // Position labels at 65% of the radius
+
+            data.forEach((item, index) => {
+                const label = document.createElement('div');
+                label.className = 'wheel-label';
+                label.textContent = item;
+
+                const midAngle = segmentAngle * (index + 0.5);
+                const midAngleRad = (midAngle - 90) * (Math.PI / 180);
+
+                const xPos = labelRadius * Math.cos(midAngleRad);
+                const yPos = labelRadius * Math.sin(midAngleRad);
+
+                let textRotation = midAngle;
+                if (textRotation > 90 && textRotation < 270) {
+                    textRotation += 180;
+                }
+
+                label.style.transform = `translate(${xPos}px, ${yPos}px) translate(-50%, -50%) rotate(${textRotation}deg)`;
+
+                wheel.appendChild(label);
+            });
         }
 
         function spinWheels() {
@@ -317,28 +431,35 @@
             spinButton.textContent = '🌀 Spinning...';
             resultsContainer.style.display = 'none';
 
-            // Add spinning animation to all wheels
-            const wheels = ['dataWheel', 'modelWheel', 'taskWheel'];
-            wheels.forEach(wheelId => {
-                const wheel = document.getElementById(wheelId);
-                wheel.classList.add('spinning');
-            });
+            // Generate random results and calculate rotations
+            const wheels = [
+                { id: 'dataWheel', type: 'data', resultId: 'dataResult' },
+                { id: 'modelWheel', type: 'model', resultId: 'modelResult' },
+                { id: 'taskWheel', type: 'task', resultId: 'taskResult' }
+            ];
 
-            // Generate random results
-            const results = {
-                data: getRandomChoice(wheelData.data),
-                model: getRandomChoice(wheelData.model),
-                task: getRandomChoice(wheelData.task)
-            };
+            const results = {};
+
+            wheels.forEach(wheelInfo => {
+                const wheel = document.getElementById(wheelInfo.id);
+                const data = wheelData[wheelInfo.type];
+                const selectedIndex = getRandomIndex(data);
+                const selectedValue = data[selectedIndex];
+
+                results[wheelInfo.type] = selectedValue;
+
+                // Calculate rotation to align selected segment with needle
+                const segmentAngle = 360 / data.length;
+                const targetAngle = -(selectedIndex * segmentAngle);
+                const totalRotation = 360 * 5 + targetAngle;
+
+                // Apply the rotation
+                wheel.style.transition = 'transform 3s cubic-bezier(0.23, 1, 0.32, 1)';
+                wheel.style.transform = `rotate(${totalRotation}deg)`;
+            });
 
             // Update results after spinning animation
             setTimeout(() => {
-                // Remove spinning animation
-                wheels.forEach(wheelId => {
-                    const wheel = document.getElementById(wheelId);
-                    wheel.classList.remove('spinning');
-                });
-
                 // Display results
                 document.getElementById('dataResult').textContent = results.data;
                 document.getElementById('modelResult').textContent = results.model;
@@ -360,7 +481,14 @@
                 spinButton.disabled = false;
                 spinButton.textContent = '🎲 Spin Again!';
                 isSpinning = false;
-            }, 3000);
+
+                // Reset wheel transition for smooth resize
+                wheels.forEach(wheelInfo => {
+                    const wheel = document.getElementById(wheelInfo.id);
+                    if (wheel) wheel.style.transition = 'transform 0s';
+                });
+
+            }, 3200);
         }
 
         function createConfetti() {
@@ -390,6 +518,22 @@
         document.addEventListener('DOMContentLoaded', function () {
             console.log('ML Roulette loaded successfully!');
             console.log('Wheel data:', wheelData);
+
+            // Setup all wheels
+            setupWheel('dataWheel', 'data');
+            setupWheel('modelWheel', 'model');
+            setupWheel('taskWheel', 'task');
+
+            // Re-setup on resize to adjust label positions
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    setupWheel('dataWheel', 'data');
+                    setupWheel('modelWheel', 'model');
+                    setupWheel('taskWheel', 'task');
+                }, 100);
+            });
         });
     </script>
 </body>
