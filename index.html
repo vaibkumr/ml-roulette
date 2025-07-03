@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Roulette - Machine Learning Roulette Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .wheels-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .wheel-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .wheel-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .wheel {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            position: relative;
+            background: conic-gradient(from 0deg,
+                    #ff6b6b 0deg 45deg,
+                    #4ecdc4 45deg 90deg,
+                    #45b7d1 90deg 135deg,
+                    #96ceb4 135deg 180deg,
+                    #feca57 180deg 225deg,
+                    #ff9ff3 225deg 270deg,
+                    #54a0ff 270deg 315deg,
+                    #5f27cd 315deg 360deg);
+            border: 8px solid white;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.1s ease;
+        }
+
+        .wheel-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .wheel-result {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            line-height: 1.3;
+            padding: 0.5rem;
+        }
+
+        .spin-button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .spin-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .spin-button:active {
+            transform: translateY(-1px);
+        }
+
+        .spin-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .spinning {
+            animation: spin 3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(1800deg);
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .results-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .result-text {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .wheels-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .wheel {
+                width: 150px;
+                height: 150px;
+            }
+
+            .wheel-content {
+                width: 120px;
+                height: 120px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎰 ML Roulette</h1>
+        <p class="subtitle">Spin the wheels to get your random machine learning combination!</p>
+
+        <div class="wheels-container">
+            <div class="wheel-wrapper">
+                <div class="wheel-title">📊 Data</div>
+                <div class="wheel" id="dataWheel">
+                    <div class="wheel-content">
+                        <div class="wheel-result" id="dataResult">Ready to spin!</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wheel-wrapper">
+                <div class="wheel-title">🧠 Model</div>
+                <div class="wheel" id="modelWheel">
+                    <div class="wheel-content">
+                        <div class="wheel-result" id="modelResult">Ready to spin!</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wheel-wrapper">
+                <div class="wheel-title">🎯 Task</div>
+                <div class="wheel" id="taskWheel">
+                    <div class="wheel-content">
+                        <div class="wheel-result" id="taskResult">Ready to spin!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="spin-button" id="spinButton" onclick="spinWheels()">
+            🎲 Spin the Wheels!
+        </button>
+
+        <div class="results-container" id="resultsContainer" style="display: none;">
+            <div class="result-text">🎉 Your ML Challenge:</div>
+            <div id="combinationResult"></div>
+        </div>
+    </div>
+
+    <script>
+        // JSON data for the wheels
+        const wheelData = {
+            data: [
+                "Tabular",
+                "Text",
+                "Images",
+                "Joker"
+            ],
+            model: [
+                "Linear",
+                "MLP",
+                "CNN",
+                "RNN (LSTM/GRU)",
+                "Transformers (Encoder/Decoder)",
+                "Tree based (Random forests, GBDTs)",
+                "SVMs",
+                "Joker"
+            ],
+            task: [
+                "Regression",
+                "Binary classification",
+                "Multi-class classification",
+                "Multi-label multi-class classification",
+                "Dimensionality reduction",
+                "Anomaly detection",
+                "Clustering",
+                "Joker"
+            ]
+        };
+
+        let isSpinning = false;
+
+        function getRandomChoice(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function spinWheels() {
+            if (isSpinning) return;
+
+            isSpinning = true;
+            const spinButton = document.getElementById('spinButton');
+            const resultsContainer = document.getElementById('resultsContainer');
+
+            spinButton.disabled = true;
+            spinButton.textContent = '🌀 Spinning...';
+            resultsContainer.style.display = 'none';
+
+            // Add spinning animation to all wheels
+            const wheels = ['dataWheel', 'modelWheel', 'taskWheel'];
+            wheels.forEach(wheelId => {
+                const wheel = document.getElementById(wheelId);
+                wheel.classList.add('spinning');
+            });
+
+            // Generate random results
+            const results = {
+                data: getRandomChoice(wheelData.data),
+                model: getRandomChoice(wheelData.model),
+                task: getRandomChoice(wheelData.task)
+            };
+
+            // Update results after spinning animation
+            setTimeout(() => {
+                // Remove spinning animation
+                wheels.forEach(wheelId => {
+                    const wheel = document.getElementById(wheelId);
+                    wheel.classList.remove('spinning');
+                });
+
+                // Display results
+                document.getElementById('dataResult').textContent = results.data;
+                document.getElementById('modelResult').textContent = results.model;
+                document.getElementById('taskResult').textContent = results.task;
+
+                // Show combination result
+                const combinationText = `
+                    <strong>Data:</strong> ${results.data}<br>
+                    <strong>Model:</strong> ${results.model}<br>
+                    <strong>Task:</strong> ${results.task}
+                `;
+                document.getElementById('combinationResult').innerHTML = combinationText;
+                resultsContainer.style.display = 'block';
+
+                // Create confetti
+                createConfetti();
+
+                // Reset button
+                spinButton.disabled = false;
+                spinButton.textContent = '🎲 Spin Again!';
+                isSpinning = false;
+            }, 3000);
+        }
+
+        function createConfetti() {
+            const confettiContainer = document.createElement('div');
+            confettiContainer.className = 'confetti';
+            document.body.appendChild(confettiContainer);
+
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'];
+
+            for (let i = 0; i < 100; i++) {
+                const confettiPiece = document.createElement('div');
+                confettiPiece.className = 'confetti-piece';
+                confettiPiece.style.left = Math.random() * 100 + '%';
+                confettiPiece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confettiPiece.style.animationDelay = Math.random() * 2 + 's';
+                confettiPiece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confettiContainer.appendChild(confettiPiece);
+            }
+
+            // Remove confetti after animation
+            setTimeout(() => {
+                document.body.removeChild(confettiContainer);
+            }, 4000);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('ML Roulette loaded successfully!');
+            console.log('Wheel data:', wheelData);
+        });
+    </script>
+</body>
+
+</html>
