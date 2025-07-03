@@ -2,7 +2,7 @@
 
 ## About
 
-Welcome to **ML-Roulette** - a fun machine learning challenge game that generates random combinations of ML pipeline components to create exciting coding challenges!
+Welcome to **ML-Roulette** - a fun machine learning challenge game that generates random combinations of ML pipeline components to create exciting coding challenges. Everything will be vibe-coded, almost nothing will be hand coded. Think of this as art where you pick up some brush, paint and get lost in the muse. No brain, only vibes.
 
 
 I'll be **livestreaming** my attempts at solving these random ML challenges on **Twitch** for fun.
